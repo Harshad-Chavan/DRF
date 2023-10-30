@@ -7,6 +7,8 @@ from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+from products.serializers import ProductSerializer
+
 # Create your views here.
 # def api_home(request, *args, **kwargs):
 #     body = request.body  # --> this is a byte string of json data
@@ -27,12 +29,14 @@ from rest_framework.decorators import api_view
 
 @api_view(["GET"])
 def api_home(request, *args, **kwargs):
-    model_data = Product.objects.all().order_by("?").first()
+    instance = Product.objects.all().order_by("?").first()
     data = {}
-    if model_data:
+    if instance:
         # data['id'] = model_data.id
         # data["title"] = model_data.title
         # data["content"] = model_data.content
         # data["price"] = model_data.price
-        data = model_to_dict(model_data, fields=["id", "title", "price"])
+        # data = model_to_dict(model_data, fields=["id", "title", "price", "sale_price"])
+
+        data = ProductSerializer(instance).data
     return Response(data)
